@@ -6,17 +6,17 @@
 #include <time.h>
 
 typedef struct {
-  l_list *head;
-  l_list *tail;
+  LinkedList *head;
+  LinkedList *tail;
 } Group;
 
-Group rearrange_group(l_list *head) {
-  l_list *odd_head = head, *even_head = head->next;
-  l_list *odd_tail = odd_head, *even_tail = even_head;
+Group rearrange_group(LinkedList *head) {
+  LinkedList *odd_head = head, *even_head = head->next;
+  LinkedList *odd_tail = odd_head, *even_tail = even_head;
 
   for (uint32_t i = 0; i < GROUP_SIZE / 2 - 1; i++) {
-    l_list *next_odd = even_tail->next;
-    l_list *next_even = next_odd->next;
+    LinkedList *next_odd = even_tail->next;
+    LinkedList *next_even = next_odd->next;
 
     odd_tail->next = next_odd;
     even_tail->next = next_even;
@@ -38,8 +38,8 @@ Group rearrange_group(l_list *head) {
 int main(int32_t argc, char **argv) {
   srand(clock());
 
-  l_list *list = get_input(argc, argv);
-  l_list_display(list);
+  LinkedList *list = get_input(argc, argv);
+  LinkedList_display(list);
 
   printf("Sorting.\n");
 
@@ -51,8 +51,8 @@ int main(int32_t argc, char **argv) {
     current = next;
   }
 
-  l_list_display(first.head);
+  LinkedList_display(first.head);
 
-  l_list_free(first.head);
+  LinkedList_free(first.head);
   return 0;
 }

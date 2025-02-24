@@ -4,21 +4,21 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-l_list *l_list_new(const int32_t value) {
-  l_list *head = (l_list *)malloc(sizeof(l_list));
+LinkedList *LinkedList_new(const int32_t value) {
+  LinkedList *head = (LinkedList *)malloc(sizeof(LinkedList));
   head->value = value;
-  head->next = (struct l_list *)NULL;
+  head->next = (struct LinkedList *)NULL;
   return head;
 }
 
-l_list *l_list_push(l_list *list, const int32_t value) {
-  l_list *next = l_list_new(value);
-  list->next = (struct l_list *)next;
+LinkedList *LinkedList_push(LinkedList *list, const int32_t value) {
+  LinkedList *next = LinkedList_new(value);
+  list->next = (struct LinkedList *)next;
   return next;
 }
 
-void l_list_display(l_list *list) {
-  l_list *node = list;
+void LinkedList_display(LinkedList *list) {
+  LinkedList *node = list;
   size_t index = 0;
   while (node != NULL) {
     printf("%d ", node->value);
@@ -36,10 +36,10 @@ void l_list_display(l_list *list) {
   printf("\n");
 }
 
-void l_list_free(l_list *list) {
+void LinkedList_free(LinkedList *list) {
   if (list == NULL) {
     return;
   }
-  l_list_free(list->next);
+  LinkedList_free(list->next);
   free(list);
 }

@@ -6,16 +6,16 @@
 #include <stdlib.h>
 #include <string.h>
 
-l_list *get_input(const int32_t argc, char **argv) {
-  l_list *head = l_list_new(0);
-  l_list *tail = head;
+LinkedList *get_input(const int32_t argc, char **argv) {
+  LinkedList *head = LinkedList_new(0);
+  LinkedList *tail = head;
 
   if (argc <= 1) {
     printf("No input received. Generating random sequence...\n");
     int8_t sign = (rand() % 2) ? 1 : -1;
     for (int32_t i = (rand() % 5 + 1) * GROUP_SIZE; i > 0; i--) {
       int32_t element = rand() % 100;
-      tail = l_list_push(tail, sign * element);
+      tail = LinkedList_push(tail, sign * element);
       sign *= -1;
     }
   } else {
@@ -25,7 +25,7 @@ l_list *get_input(const int32_t argc, char **argv) {
     }
     // TODO: sign validation
     for (int32_t i = 1; i < argc; i++) {
-      tail = l_list_push(tail, atoi(argv[i]));
+      tail = LinkedList_push(tail, atoi(argv[i]));
     }
   }
   return head->next;
