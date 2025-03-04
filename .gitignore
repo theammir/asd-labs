@@ -80,3 +80,6 @@ linear
 build/
 
 *.zip
+
+### Rust
+target
