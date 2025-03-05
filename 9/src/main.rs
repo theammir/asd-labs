@@ -54,10 +54,10 @@ fn draw_all_edges(
     d: &mut RaylibDrawHandle,
     adj_matrix: &AdjMatrix,
     vertex_coords: &[VertexPos],
-    directional: bool,
+    directed: bool,
 ) {
     (0..VERTEX_COUNT).for_each(|i| {
-        let lower = if directional { 0 } else { i };
+        let lower = if directed { 0 } else { i };
         (lower..VERTEX_COUNT).for_each(|j| {
             let origin = vertex_coords[i];
             let destination = vertex_coords[j];
@@ -67,16 +67,16 @@ fn draw_all_edges(
             if adj_matrix.0[i][j] == 1 {
                 if i == j {
                     draw::draw_looping_edge(d, origin.v);
-                } else if (adj_matrix.0[j][i] == 1 && directional) // symmetric
+                } else if (adj_matrix.0[j][i] == 1 && directed) // symmetric
                     || (row_absdiff == 0 && col_absdiff > 1) // same row, goes through others
                     || (col_absdiff == 0 && row_absdiff > 1) // same col, goes through others
                     || (origin.v.x == destination.v.x) // same x coordinate, yes, still possible
                     || col_absdiff >= 3
                 // honestly ^ whatever this is
                 {
-                    draw::draw_angled_edge(d, origin.v, destination.v, directional);
+                    draw::draw_angled_edge(d, origin.v, destination.v, directed);
                 } else {
-                    draw::draw_straight_edge(d, origin.v, destination.v, directional);
+                    draw::draw_straight_edge(d, origin.v, destination.v, directed);
                 }
             }
         })
@@ -86,8 +86,8 @@ fn draw_all_edges(
 fn main() {
     let dir_matrix = graph::generate_dir_matrix();
     let undir_matrix = graph::convert_to_undir(&dir_matrix);
-    println!("Directional adjacency matrix:\n{}", dir_matrix);
-    println!("Undirectional adjacency matrix:\n{}", undir_matrix);
+    println!("Directed adjacency matrix:\n{}", dir_matrix);
+    println!("Undirected adjacency matrix:\n{}", undir_matrix);
 
     let (mut rl, thread) = raylib::init()
         .size(WIN_WIDTH, WIN_HEIGHT)

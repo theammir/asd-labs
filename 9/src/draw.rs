@@ -65,7 +65,7 @@ pub fn draw_angled_edge(
     d: &mut RaylibDrawHandle,
     center_from: Vector2,
     center_to: Vector2,
-    directional: bool,
+    directed: bool,
 ) {
     const EDGE_BASE_ANGLE: f32 = 0.05 * PI;
 
@@ -80,7 +80,7 @@ pub fn draw_angled_edge(
     let midpoint = from + vector_middle + direction.rotated(0.5 * PI) * mid_offset;
     d.draw_line_v(from, midpoint, Color::BLACK);
     d.draw_line_v(midpoint, to, Color::BLACK);
-    if directional {
+    if directed {
         draw_arrowhead(d, to, (to - midpoint).normalized());
     }
 }
