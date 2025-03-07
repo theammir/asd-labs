@@ -90,14 +90,14 @@ fn draw_all_edges(
 
 fn generate_and_print() -> (AdjMatrix, AdjMatrix, AdjMatrix, AdjMatrix) {
     let dir_matrix = AdjMatrix::generate(K_1);
-    let dir_in_degrees = (0..VERTEX_COUNT).map(|i| dir_matrix.degree_in(i));
-    let dir_out_degrees = (0..VERTEX_COUNT).map(|i| dir_matrix.degree_out(i));
+    let in_degrees = (0..VERTEX_COUNT).map(|i| dir_matrix.degree_in(i));
+    let out_degrees = (0..VERTEX_COUNT).map(|i| dir_matrix.degree_out(i));
 
     println!("Directed adjacency matrix:\n{}", dir_matrix);
     print!("Vertex semi-degrees (IN):  ");
-    dir_in_degrees.for_each(|deg| print!("{} ", deg));
+    in_degrees.for_each(|deg| print!("{} ", deg));
     print!("\nVertex semi-degrees (OUT): ");
-    dir_out_degrees.for_each(|deg| print!("{} ", deg));
+    out_degrees.for_each(|deg| print!("{} ", deg));
     println!("\n{:#}", dir_matrix);
 
     let undir_matrix = dir_matrix.undir();
@@ -105,6 +105,8 @@ fn generate_and_print() -> (AdjMatrix, AdjMatrix, AdjMatrix, AdjMatrix) {
     println!("{:#}", undir_matrix);
 
     let dir_matrix2 = AdjMatrix::generate(K_2);
+    let in_degrees2 = (0..VERTEX_COUNT).map(|i| dir_matrix2.degree_in(i));
+    let out_degrees2 = (0..VERTEX_COUNT).map(|i| dir_matrix2.degree_out(i));
     let dir_paths2: Vec<_> = dir_matrix2
         .all_paths_of_2()
         .iter()
@@ -121,7 +123,11 @@ fn generate_and_print() -> (AdjMatrix, AdjMatrix, AdjMatrix, AdjMatrix) {
     let condensed = dir_matrix2.condensed();
 
     println!("\n\n\nModified adjacency matrix:\n{}", dir_matrix2);
-    print!("Paths of 2: ");
+    print!("Vertex semi-degrees (IN):  ");
+    in_degrees2.for_each(|deg| print!("{} ", deg));
+    print!("\nVertex semi-degrees (OUT): ");
+    out_degrees2.for_each(|deg| print!("{} ", deg));
+    print!("\nPaths of 2: ");
     dir_paths2.iter().for_each(|path| print!("{} ", path));
     print!("\n\nPaths of 3: ");
     dir_paths3.iter().for_each(|path| print!("{} ", path));
