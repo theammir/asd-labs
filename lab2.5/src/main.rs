@@ -165,6 +165,16 @@ fn draw_controls(d: &mut RaylibDrawHandle, font: &Font, state: KeyboardKey, hide
     );
 }
 
+fn print_new_order<S: Search>(step: &SearchStep<S>) {
+    println!("New vertex order:");
+    step.visited
+        .iter()
+        .enumerate()
+        .map(|(index, (_, to))| format!("{}->{}", to + 1, index + 1))
+        .for_each(|s| print!("{} ", s));
+    println!("\n");
+}
+
 fn main() {
     let (mut rl, thread) = raylib::init()
         .size(WIN_WIDTH, WIN_HEIGHT)
@@ -200,13 +210,7 @@ fn main() {
             match state {
                 KeyboardKey::KEY_F1 => {
                     if !matrix.search_next::<Bfs>(&mut bfs) {
-                        println!("New vertex order:");
-                        bfs.visited
-                            .iter()
-                            .enumerate()
-                            .map(|(index, (_, to))| format!("{}->{}", to + 1, index + 1))
-                            .for_each(|s| print!("{} ", s));
-                        println!("\n");
+                        print_new_order(&bfs);
 
                         let matrix: AdjMatrix = (&bfs).into();
                         println!("BFS tree:\n{}", matrix)
@@ -214,13 +218,7 @@ fn main() {
                 }
                 KeyboardKey::KEY_F2 => {
                     if !matrix.search_next::<Dfs>(&mut dfs) {
-                        println!("New vertex order:");
-                        dfs.visited
-                            .iter()
-                            .enumerate()
-                            .map(|(index, (_, to))| format!("{}->{}", to + 1, index + 1))
-                            .for_each(|s| print!("{} ", s));
-                        println!("\n");
+                        print_new_order(&dfs);
 
                         let matrix: AdjMatrix = (&dfs).into();
                         println!("DFS tree:\n{}", matrix);
