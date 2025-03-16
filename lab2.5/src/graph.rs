@@ -40,15 +40,15 @@ impl Search for Bfs {}
 impl Search for Dfs {}
 
 #[derive(Debug)]
-pub struct SearchStep<Q: Search> {
+pub struct SearchStep<S: Search> {
     pub active: usize,
     pub visited: Vec<(usize, usize)>,
     pub queue: VecDeque<usize>,
     pub tree: Vec<(usize, usize)>,
-    marker: PhantomData<Q>,
+    marker: PhantomData<S>,
 }
 
-impl<Q: Search> SearchStep<Q> {
+impl<S: Search> SearchStep<S> {
     pub fn new(active: usize, size: usize) -> Self {
         let mut visited = Vec::with_capacity(size);
         visited.push((active, active));
@@ -105,9 +105,9 @@ impl AdjMatrix {
         )
     }
 
-    pub fn search_next<Q: Search>(&self, step: &mut SearchStep<Q>) -> bool
+    pub fn search_next<S: Search>(&self, step: &mut SearchStep<S>) -> bool
     where
-        SearchStep<Q>: Queue,
+        SearchStep<S>: Queue,
     {
         if let Some(next) = step.pop_queue() {
             step.active = next;
@@ -130,10 +130,23 @@ impl AdjMatrix {
                 (0..self.0.len()).find(|vertex| !step.tree.iter().any(|(_, to)| to == vertex))
             {
                 step.push_queue(unvisited);
-                self.search_next::<Q>(step);
+                self.search_next::<S>(step);
                 return true;
             }
             false
         }
+    }
+}
+
+impl<S: Search> From<&SearchStep<S>> for AdjMatrix {
+    fn from(value: &SearchStep<S>) -> Self {
+        let size = value.tree.len();
+        let mut result = vec![vec![0_u32; size]; size];
+        for (from, to) in &value.tree {
+            if *from != *to {
+                result[*from][*to] = 1;
+            }
+        }
+        AdjMatrix(result)
     }
 }

@@ -18,11 +18,11 @@ struct VertexPos {
     col: usize,
 }
 
-fn draw_all_vertices<T: Search>(
+fn draw_all_vertices<S: Search>(
     d: &mut RaylibDrawHandle,
     font: &Font,
     rows: &[usize],
-    step: &SearchStep<T>,
+    step: &SearchStep<S>,
 ) -> Vec<VertexPos> {
     fn current_position(index: usize, rows: &[usize]) -> (usize, usize) {
         let mut cumulative = 0;
@@ -71,12 +71,12 @@ fn draw_all_vertices<T: Search>(
     vertex_coords
 }
 
-fn draw_all_edges<T: Search>(
+fn draw_all_edges<S: Search>(
     d: &mut RaylibDrawHandle,
     adj_matrix: &AdjMatrix,
     vertex_coords: &[VertexPos],
     directed: bool,
-    step: &SearchStep<T>,
+    step: &SearchStep<S>,
     hide_edges: bool,
 ) {
     for i in 0..vertex_coords.len() {
@@ -88,7 +88,7 @@ fn draw_all_edges<T: Search>(
             let col_absdiff = (destination.col as i64 - origin.col as i64).abs();
 
             if adj_matrix.0[i][j] == 1 {
-                let color = if step.tree.iter().any(|(from, to)| *from == i && *to == j) {
+                let color = if i != j && step.tree.iter().any(|(from, to)| *from == i && *to == j) {
                     Color::RED
                 } else if hide_edges {
                     Color::WHITE.alpha(0.0)
@@ -185,7 +185,7 @@ fn main() {
     let mut state = KeyboardKey::KEY_F1;
     let mut hide_edges = false;
 
-    println!("{}", matrix);
+    println!("Graph:\n{}", matrix);
 
     while !rl.window_should_close() {
         if rl.is_key_pressed(KeyboardKey::KEY_F1) {
@@ -197,10 +197,36 @@ fn main() {
         }
 
         if rl.is_key_pressed(KeyboardKey::KEY_SPACE) {
-            if state == KeyboardKey::KEY_F1 && matrix.search_next::<Bfs>(&mut bfs) {
-                println!("{:?}", bfs);
-            } else if state == KeyboardKey::KEY_F2 && matrix.search_next::<Dfs>(&mut dfs) {
-                println!("{:?}", dfs);
+            match state {
+                KeyboardKey::KEY_F1 => {
+                    if !matrix.search_next::<Bfs>(&mut bfs) {
+                        println!("New vertex order:");
+                        bfs.visited
+                            .iter()
+                            .enumerate()
+                            .map(|(index, (_, to))| format!("{}->{}", to + 1, index + 1))
+                            .for_each(|s| print!("{} ", s));
+                        println!("\n");
+
+                        let matrix: AdjMatrix = (&bfs).into();
+                        println!("BFS tree:\n{}", matrix)
+                    }
+                }
+                KeyboardKey::KEY_F2 => {
+                    if !matrix.search_next::<Dfs>(&mut dfs) {
+                        println!("New vertex order:");
+                        dfs.visited
+                            .iter()
+                            .enumerate()
+                            .map(|(index, (_, to))| format!("{}->{}", to + 1, index + 1))
+                            .for_each(|s| print!("{} ", s));
+                        println!("\n");
+
+                        let matrix: AdjMatrix = (&dfs).into();
+                        println!("DFS tree:\n{}", matrix);
+                    }
+                }
+                _ => {}
             }
         }
         let mut d = rl.begin_drawing(&thread);
