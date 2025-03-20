@@ -12,7 +12,7 @@ const WIN_HEIGHT: i32 = 600;
 const WIN_MARGIN: f32 = 0.8;
 const OVERLAY_FONT_SIZE: i32 = 24;
 
-const K: f32 = 1.0 - 2.0 * 0.01 - 8.0 * 0.005 - 0.15;
+const K: f32 = 1.0 - 2.0 * 0.01 - 8.0 * 0.005 - 0.05;
 
 #[derive(Debug, Clone, Copy)]
 struct VertexPos {

@@ -9,7 +9,7 @@ const VERTEX_RADIUS: f32 = 20.0;
 const VERTEX_WIDTH: u32 = 3;
 
 const EDGE_BASE_ANGLE: f32 = 0.05 * PI;
-const WEIGHT_TEXT_OFFSET: f32 = 0.4; // 0.0..=0.5
+const WEIGHT_TEXT_OFFSET: f32 = 0.35; // 0.0..=0.5
 
 pub fn draw_text_pro(
     d: &mut RaylibDrawHandle,
